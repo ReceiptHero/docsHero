@@ -23,7 +23,7 @@ paths:
       tags:
         - Receipt
       security: 
-        - apiKey: []
+        - POSAuthorization: []
       requestBody:
         description: Receipt payload
         content: 
@@ -95,8 +95,8 @@ paths:
           required: true
           description: Format of the returned receipt
       security:
-        - accessToken: []
-        - apiKey: []
+        - OAuth2AccessToken: []
+        - PartnerAppAuthorization: []
       responses:
         '200':
           description: Receipt in requested file type.
@@ -121,7 +121,7 @@ paths:
       tags:
         - OAuth2
       security: 
-        - apiKey: []
+        - PartnerAppAuthorization: []
       requestBody:
         description: Access token body
         content: 
@@ -681,26 +681,21 @@ components:
         error:
           type: string
   securitySchemes:
-    apiKey:
+    POSAuthorization:
       type: apiKey
-      name: RECEIPTHERO_APIKEY
+      name: Authorization
       in: header
-      description: 'Acces any of endpoints partner app must include API key in every request. You can request API key from Receipthero. API key contains prefix Token '
-    accessToken:
+      description: 'Access any of endpoints POS partner app must include API key in every request. You can request API key from Receipthero. API key contains prefix Token '
+    PartnerAppAuthorization:
+      type: apiKey
+      name: RECEIPTHERO_API
+      in: header
+      description: 'Access any of endpoints partner app must include API key in every request. You can request API key from Receipthero. API key contains prefix Token '
+    OAuth2AccessToken:
       type: apiKey
       name: Authorization
       in: header
       description: 'Bearer token which was fetched through OAuth2 flow. Use Bearer prefix here'
-    oAuth2:
-      type: oauth2
-      description: This API uses authorizationCode. [More info](https://docs.receipthero.io/partner-app-api/oauth-access)
-      flows:
-        authorizationCode:
-          authorizationUrl: https://dev.receipthero.io/auth
-          tokenUrl: https://dev.receipthero.io/oauth/api/token
-          scopes:
-            receipt:write: send receipt to user
-            receipt:read: read user receipt data
   examples:
     HeroJSONReceipt:
       value:
@@ -760,7 +755,7 @@ components:
             totalAmountIncVAT: 111
             totalAmountExcVAT: 76
           customAttributes:
-          - milk: false
+          - milk: 'false'
         customAttributes:
         - cashier: Joel O.
         totalPriceExcVAT: 100
@@ -823,7 +818,7 @@ components:
               totalAmountIncVAT: 111
               totalAmountExcVAT: 76
             customAttributes:
-            - milk: false
+            - milk: 'false'
           customAttributes:
           - cashier: Joel O.
           totalPriceExcVAT: 100
@@ -893,7 +888,7 @@ components:
               totalAmountIncVAT: 111
               totalAmountExcVAT: 76
             customAttributes:
-            - milk: false
+            - milk: 'false'
           customAttributes:
           - cashier: Joel O.
           totalPriceExcVAT: 100
@@ -964,7 +959,7 @@ components:
               totalAmountIncVAT: 111
               totalAmountExcVAT: 76
             customAttributes:
-            - milk: false
+            - milk: 'false'
           customAttributes:
           - cashier: Joel O.
           totalPriceExcVAT: 100

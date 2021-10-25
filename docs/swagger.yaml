@@ -8,8 +8,6 @@ info:
 servers:
   - description: Receipthero API Development
     url: https://api.dev.receipthero.io
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/Receipthero/Receipthero/0.0.1
   - description: Receipthero API Production
     url: https://api.receipthero.io
 paths:

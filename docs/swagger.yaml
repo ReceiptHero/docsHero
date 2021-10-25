@@ -543,7 +543,7 @@ components:
             - payments
             - products
             - receiptNumber
-            - receiptTimestamp
+            - receiptTimeStamp
             - totalPriceExcVAT
             - totalPriceIncVAT
             - totalVATAmount

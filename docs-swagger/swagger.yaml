@@ -14,12 +14,12 @@ paths:
   '/api/v1/receipts':
     post:
       summary: 'Endpoint for sending structured e-receipt to receipthero system.'
-      description: 'Send eReceipts to receipthero system. Accepts multiple different formats and linking methods. Preferred way is to send receipt individually and fast and possible to provide best experience for end user'
+      description: 'Send eReceipts to receipthero system. Accepts multiple different formats and linking methods.'
       externalDocs:
         url: 'https://docs.receipthero.io/merchant-api-group/post-receipt'
       operationId: sendReceipt
       tags:
-        - POS Receipt
+        - Receipt
       security: 
         - POSAuthorization: []
       requestBody:

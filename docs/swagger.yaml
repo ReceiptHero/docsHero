@@ -687,7 +687,7 @@ components:
       description: 'Access any of endpoints POS partner app must include API key in every request. You can request API key from Receipthero. API key contains prefix Token '
     PartnerAppAuthorization:
       type: apiKey
-      name: RECEIPTHERO_API
+      name: RECEIPTHERO_APIKEY
       in: header
       description: 'Access any of endpoints partner app must include API key in every request. You can request API key from Receipthero. API key contains prefix Token '
     OAuth2AccessToken:

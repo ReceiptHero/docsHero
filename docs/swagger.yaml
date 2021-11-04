@@ -19,7 +19,8 @@ paths:
         url: 'https://docs.receipthero.io/merchant-api-group/post-receipt'
       operationId: sendReceipt
       tags:
-        - POS Receipt
+        - POS
+        - Receipt
       security: 
         - POSAuthorization: []
       requestBody:

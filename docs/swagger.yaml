@@ -184,6 +184,27 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  '/membership':
+    get:
+      summary: 'Endpoint for updating Oauth2 connection.'
+      description: Update already created connection. User can for example select which cards are used in connection.
+      operationId: updateOAuth2
+      parameters:
+        - name: receipthero_id
+          in: query
+          required: true
+          description: 'The membership id for the connection. Is found in the JWT.'
+          example: '123456789'
+        - name: redirect_uri
+          in: query
+          required: true
+          description: 'The URI where the user is redirected back to afterwards.'
+          example: 'https%3A%2F%2Freceipthero.io%2Fcallback'
+      tags:
+        - OAuth2
+      responses:
+        302:
+          description: 'Redirect to OAuth provider'
   
   '/api/oauth/revoke':
     delete:

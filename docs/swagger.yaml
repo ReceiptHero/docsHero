@@ -10,6 +10,10 @@ servers:
     url: https://api.dev.receipthero.io
   - description: Receipthero API Production
     url: https://api.receipthero.io
+  - description: Receipthero OAuth2 Auth endpoint Production
+    url: https://www.dev.receipthero.io
+  - description: Receipthero OAuth2 Auth endpoint Production
+    url: https://www.receipthero.io
 paths:
   '/api/v1/receipts':
     post:
@@ -109,6 +113,45 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+  '/auth':
+    get:
+      summary: 'Endpoint for getting authorization token from receipthero.'
+      description: Initiate the flow by redirecting the user to the ReceiptHero consent page.
+      operationId: auth
+      parameters:
+        - name: response_type
+          in: query
+          required: true
+          enum:
+            - code
+          example: code
+        - name: client_id
+          in: query
+          required: true
+          type: string
+          description: 'Oauth2 client identifier'
+          example: '12345678'
+        - name: redirect_uri
+          in: query
+          required: true
+          description: 'Provided call back url which must match oauth2 client callback url'
+          example: 'https%3A%2F%2Freceipthero.io%2Fcallback'
+        - name: scope
+          in: query
+          required: true
+          description: 'Defining if want to read receipt data or write reicepts'
+          example: '[receipt:read,receipt:write]'
+        - name: state
+          in: query
+          required: true
+          example: 'eyJtZXNzYWdlIjogIlJlY2VpcHRoZXJvIENhZmUiLCAicmFuZG9taXplZCI6ICJ2YWx1ZSJ9'
+          description: 'To use the state parameters, the state is to be defined in JSON and encoded into Base64.'
+      tags:
+        - OAuth2
+      responses:
+        302:
+          description: Redirect to OAuth provider
                 
   '/api/oauth/token':
     post:
@@ -140,7 +183,33 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'              
+                $ref: '#/components/schemas/Error'
+  
+  '/api/oauth/revoke':
+    delete:
+      summary: 'Endpoint for revoking access token from receipthero.'
+      description: 'Endpoint for revoking access token from receipthero.'
+      externalDocs:
+        url: 'https://docs.receipthero.io/partner-app-api/oauth-access'
+      operationId: revokeAccessToken
+      tags:
+        - OAuth2
+      security: 
+        - OAuth2AccessToken: []
+        - PartnerAppAuthorization: []
+      responses:
+        '200':
+          description: 'Sample response: Successfully revoked access token'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OKResponse'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   
 components:
   schemas:

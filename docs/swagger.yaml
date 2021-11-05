@@ -1,85 +1,83 @@
 openapi: 3.0.0
 info:
-  version: '0.0.1'
-  title: 'ReceiptHero'
-  description: 'Documentation of Receipthero public API'
+  version: "0.0.1"
+  title: "ReceiptHero"
+  description: "Documentation of Receipthero public API"
   contact:
-    email: 'valtteri@receipthero.io'
+    email: "valtteri@receipthero.io"
 servers:
   - description: Receipthero API Development
     url: https://api.dev.receipthero.io
   - description: Receipthero API Production
     url: https://api.receipthero.io
-  - description: Receipthero OAuth2 Auth endpoint Production
+  - description: Receipthero OAuth2 Auth endpoint Development
     url: https://www.dev.receipthero.io
   - description: Receipthero OAuth2 Auth endpoint Production
     url: https://www.receipthero.io
 paths:
-  '/api/v1/receipts':
+  "/api/v1/receipts":
     post:
-      summary: 'Endpoint for sending structured e-receipt to receipthero system.'
-      description: 'Send eReceipts to receipthero system. Accepts multiple different formats and linking methods. Preferred way is to send receipt individually and fast and possible to provide best experience for end user'
+      summary: "Endpoint for sending structured e-receipt to receipthero system."
+      description: "Send eReceipts to receipthero system. Accepts multiple different formats and linking methods. Preferred way is to send receipt individually and fast and possible to provide best experience for end user"
       externalDocs:
-        url: 'https://docs.receipthero.io/merchant-api-group/post-receipt'
+        url: "https://docs.receipthero.io/merchant-api-group/post-receipt"
       operationId: sendReceipt
       tags:
         - POS
         - Receipt
-      security: 
+      security:
         - POSAuthorization: []
       requestBody:
         description: Receipt payload
-        content: 
-          'application/json':
+        content:
+          "application/json":
             schema:
               anyOf:
-                - $ref: '#/components/schemas/Receipt'
-                - $ref: '#/components/schemas/ReceiptArray'
-                - $ref: '#/components/schemas/ReceiptWithAttribute'
-                - $ref: '#/components/schemas/ReceiptWithAttributeArray'
+                - $ref: "#/components/schemas/Receipt"
+                - $ref: "#/components/schemas/ReceiptArray"
+                - $ref: "#/components/schemas/ReceiptWithAttribute"
+                - $ref: "#/components/schemas/ReceiptWithAttributeArray"
             examples:
-                HeroJSONReceipt:
-                    $ref: '#/components/examples/HeroJSONReceipt'
-                HeroJSONReceiptArray:
-                    $ref: '#/components/examples/HeroJSONReceiptArray'
-                HeroJSONReceiptWithAttributes:
-                    $ref: '#/components/examples/HeroJSONReceiptWithAttributes'
-                HeroJSONReceiptWithAttributesArray:
-                    $ref: '#/components/examples/HeroJSONReceiptWithAttributesArray'
-          'application/xml':
+              HeroJSONReceipt:
+                $ref: "#/components/examples/HeroJSONReceipt"
+              HeroJSONReceiptArray:
+                $ref: "#/components/examples/HeroJSONReceiptArray"
+              HeroJSONReceiptWithAttributes:
+                $ref: "#/components/examples/HeroJSONReceiptWithAttributes"
+              HeroJSONReceiptWithAttributesArray:
+                $ref: "#/components/examples/HeroJSONReceiptWithAttributesArray"
+          "application/xml":
             schema:
               anyOf:
-                - 
-                  title: 'Finvoice V2'
-                - 
-                  title: 'Finvoice V3'
+                - title: "Finvoice V2"
+                - title: "Finvoice V3"
 
       responses:
-        '200':
-          description: 'Sample response: Successfully received receipt(s)'
+        "200":
+          description: "Sample response: Successfully received receipt(s)"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OKResponse'
-        '400':
-          description: 'Sample response: There was error processing receipt(s)'
+                $ref: "#/components/schemas/OKResponse"
+        "400":
+          description: "Sample response: There was error processing receipt(s)"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
         default:
           description: Unexpected error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 
-  '/api/v1/receipts/{receiptId}/{fileType}':
+  "/api/v1/receipts/{receiptId}/{fileType}":
     get:
-      summary: 'Endpoint for getting receipts by id.'
+      summary: "Endpoint for getting receipts by id."
       description: Returns receipt by id in requested file type
       externalDocs:
-        url: 'https://docs.receipthero.io/partner-app-api/get-receipt'
+        url: "https://docs.receipthero.io/partner-app-api/get-receipt"
       operationId: getReceiptById
       tags:
         - Receipt
@@ -94,29 +92,29 @@ paths:
           name: fileType
           schema:
             type: string
-            enum: [hero_json,hero_pdf,finvoice_xml]
+            enum: [hero_json, hero_pdf, finvoice_xml]
           required: true
           description: Format of the returned receipt
       security:
         - OAuth2AccessToken: []
         - PartnerAppAuthorization: []
       responses:
-        '200':
+        "200":
           description: Receipt in requested file type.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Receipt'
+                $ref: "#/components/schemas/Receipt"
         default:
           description: Unexpected error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: "#/components/schemas/Error"
 
-  '/auth':
+  "/auth":
     get:
-      summary: 'Endpoint for getting authorization token from receipthero.'
+      summary: "Endpoint for getting authorization token from receipthero."
       description: Initiate the flow by redirecting the user to the ReceiptHero consent page.
       operationId: auth
       parameters:
@@ -130,396 +128,396 @@ paths:
           in: query
           required: true
           type: string
-          description: 'Oauth2 client identifier'
-          example: '12345678'
+          description: "Oauth2 client identifier"
+          example: "12345678"
         - name: redirect_uri
           in: query
           required: true
-          description: 'Provided call back url which must match oauth2 client callback url'
-          example: 'https%3A%2F%2Freceipthero.io%2Fcallback'
+          description: "Provided call back url which must match oauth2 client callback url"
+          example: "https%3A%2F%2Freceipthero.io%2Fcallback"
         - name: scope
           in: query
           required: true
-          description: 'Defining if want to read receipt data or write reicepts'
-          example: '[receipt:read,receipt:write]'
+          description: "Defining if want to read receipt data or write reicepts"
+          example: "[receipt:read,receipt:write]"
         - name: state
           in: query
           required: true
-          example: 'eyJtZXNzYWdlIjogIlJlY2VpcHRoZXJvIENhZmUiLCAicmFuZG9taXplZCI6ICJ2YWx1ZSJ9'
-          description: 'To use the state parameters, the state is to be defined in JSON and encoded into Base64.'
+          example: "eyJtZXNzYWdlIjogIlJlY2VpcHRoZXJvIENhZmUiLCAicmFuZG9taXplZCI6ICJ2YWx1ZSJ9"
+          description: "To use the state parameters, the state is to be defined in JSON and encoded into Base64."
       tags:
         - OAuth2
       responses:
         302:
           description: Redirect to OAuth provider
-                
-  '/api/oauth/token':
+
+  "/api/oauth/token":
     post:
-      summary: 'Endpoint for getting access token from receipthero.'
-      description: 'Endpoint for getting access token from receipthero.'
+      summary: "Endpoint for getting access token from receipthero."
+      description: "Endpoint for getting access token from receipthero."
       externalDocs:
-        url: 'https://docs.receipthero.io/partner-app-api/oauth-access'
+        url: "https://docs.receipthero.io/partner-app-api/oauth-access"
       operationId: getAccessToken
       tags:
         - OAuth2
-      security: 
+      security:
         - PartnerAppAuthorization: []
       requestBody:
         description: Access token body
-        content: 
-          'application/json':
+        content:
+          "application/json":
             schema:
-              $ref: '#/components/schemas/AccessTokenBody'
+              $ref: "#/components/schemas/AccessTokenBody"
 
       responses:
-        '200':
-          description: 'Sample response: Successfully received access token'
+        "200":
+          description: "Sample response: Successfully received access token"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AccessTokenResponse'
+                $ref: "#/components/schemas/AccessTokenResponse"
         default:
           description: Unexpected error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-  '/membership':
+                $ref: "#/components/schemas/Error"
+  "/membership":
     get:
-      summary: 'Endpoint for updating Oauth2 connection.'
+      summary: "Endpoint for updating Oauth2 connection."
       description: Update already created connection. User can for example select which cards are used in connection.
       operationId: updateOAuth2
       parameters:
         - name: receipthero_id
           in: query
           required: true
-          description: 'The membership id for the connection. Is found in the JWT.'
-          example: '123456789'
+          description: "The membership id for the connection. Is found in the JWT."
+          example: "123456789"
         - name: redirect_uri
           in: query
           required: true
-          description: 'The URI where the user is redirected back to afterwards.'
-          example: 'https%3A%2F%2Freceipthero.io%2Fcallback'
+          description: "The URI where the user is redirected back to afterwards."
+          example: "https%3A%2F%2Freceipthero.io%2Fcallback"
       tags:
         - OAuth2
       responses:
         302:
-          description: 'Redirect to OAuth provider'
-  
-  '/api/oauth/revoke':
+          description: "Redirect to OAuth provider"
+
+  "/api/oauth/revoke":
     delete:
-      summary: 'Endpoint for revoking access token from receipthero.'
-      description: 'Endpoint for revoking access token from receipthero.'
+      summary: "Endpoint for revoking access token from receipthero."
+      description: "Endpoint for revoking access token from receipthero."
       externalDocs:
-        url: 'https://docs.receipthero.io/partner-app-api/oauth-access'
+        url: "https://docs.receipthero.io/partner-app-api/oauth-access"
       operationId: revokeAccessToken
       tags:
         - OAuth2
-      security: 
+      security:
         - OAuth2AccessToken: []
         - PartnerAppAuthorization: []
       responses:
-        '200':
-          description: 'Sample response: Successfully revoked access token'
+        "200":
+          description: "Sample response: Successfully revoked access token"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OKResponse'
+                $ref: "#/components/schemas/OKResponse"
         default:
           description: Unexpected error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-  
+                $ref: "#/components/schemas/Error"
+
 components:
   schemas:
     Merchant:
-        type: object
-        additionalProperties: false
-        properties:
-            name:
-                type: string
-                description: 'Company name'
-                example: 'Receipthero Oy'
-            companyID:
-                type: string
-                description: 'Companys business id or VAT number'
-                example: 'FI29432413'
-            branch:
-                $ref: '#/components/schemas/Branch'
-        required:
-            - branch
-            - companyID
-            - name
-        title: Merchant
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+          description: "Company name"
+          example: "Receipthero Oy"
+        companyID:
+          type: string
+          description: "Companys business id or VAT number"
+          example: "FI29432413"
+        branch:
+          $ref: "#/components/schemas/Branch"
+      required:
+        - branch
+        - companyID
+        - name
+      title: Merchant
     Branch:
-        type: object
-        additionalProperties: false
-        properties:
-            name:
-                description: 'Branch name'
-                example: 'Receipthero Tampere'
-                type: string
-            subName:
-                description: 'Freetext slogan etc, placed under branch name'
-                example: 'Cafe'
-                type: string
-                nullable: true
-            email:
-                description: 'Email address to branch / company support'
-                example: 'support@receipthero.io'
-                type: string
-                nullable: true
-            phone:
-                description: 'Phone number to branch / company support'
-                example: '+358123456789'
-                type: string
-                nullable: true
-            address:
-                $ref: '#/components/schemas/Address'
-        required:
-            - address
-            - name
-        title: Branch
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          description: "Branch name"
+          example: "Receipthero Tampere"
+          type: string
+        subName:
+          description: "Freetext slogan etc, placed under branch name"
+          example: "Cafe"
+          type: string
+          nullable: true
+        email:
+          description: "Email address to branch / company support"
+          example: "support@receipthero.io"
+          type: string
+          nullable: true
+        phone:
+          description: "Phone number to branch / company support"
+          example: "+358123456789"
+          type: string
+          nullable: true
+        address:
+          $ref: "#/components/schemas/Address"
+      required:
+        - address
+        - name
+      title: Branch
     Address:
-        type: object
-        additionalProperties: false
-        properties:
-            streetAddress:
-                type: string
-                example: 'Finlaysoninkatu 7'
-                description: 'Branch location street address'
-            city:
-                type: string
-                example: 'Tampere'
-                description: 'Branch location city'
-            zipCode:
-                type: string
-                example: '33210'
-                description: 'Branch location zip code'
-            country:
-                type: string
-                example: 'Finland'
-                description: 'Branch location country'
-        required:
+      type: object
+      additionalProperties: false
+      properties:
+        streetAddress:
+          type: string
+          example: "Finlaysoninkatu 7"
+          description: "Branch location street address"
+        city:
+          type: string
+          example: "Tampere"
+          description: "Branch location city"
+        zipCode:
+          type: string
+          example: "33210"
+          description: "Branch location zip code"
+        country:
+          type: string
+          example: "Finland"
+          description: "Branch location country"
+      required:
         - city
         - country
         - streetAddress
         - zipCode
-        title: Address
+      title: Address
     Products:
-        type: array
-        items:
-            type: object
-            additionalProperties: false
-            properties:
-                name:
-                    type: string
-                    description: 'Product name'
-                    example: 'Cup of coffee'
-                EANCode:
-                    type: string
-                    nullable: true
-                    description: 'Products EAN code'
-                    example: '42222130165'
-                quantity:
-                    type: string
-                    description: 'Quantity of product'
-                    example: '1'
-                productId:
-                    type: string
-                    nullable: true
-                    description: 'Merchants internal productID'
-                    example: '1234'
-                quantityCode:
-                    type: string
-                    description: 'Quantity code for product'
-                    example: 'PCS'
-                freeText:
-                    type: string
-                    description: 'Product related text field'
-                    example: 'Arabica coffee'
-                unitPriceIncVAT:
-                    type: integer
-                    description: 'Unit price including VAT in fractional unit (Cents in Euros etc.)'
-                    example: 111
-                unitPriceIncVATDecimal:
-                    type: string
-                    nullable: true
-                    description: 'Unit price including VAT in main currency unit. Mainly used by petrol receipts'
-                    example: '1.11'
-                totalAmountExcVAT:
-                    type: integer
-                    description: 'Total price for product row without VAT in fractional unit'
-                    example: 76
-                totalAmountIncVAT:
-                    type: integer
-                    description: 'Unit price including VAT in fractional unit (Cents in Euros etc.)'
-                    example: 100
-                vats:
-                    $ref: '#/components/schemas/ProductVats'
-                discounts:
-                    $ref: '#/components/schemas/Discounts'
-                customAttributes:
-                    $ref: '#/components/schemas/ProductAttributes'
-        required:
-            - name
-            - quantity
-            - quantityCode
-            - totalAmountExcVAT
-            - totalAmountIncVAT
-            - unitPriceIncVAT
-            - vats
-        title: Product
+      type: array
+      items:
+        type: object
+        additionalProperties: false
+        properties:
+          name:
+            type: string
+            description: "Product name"
+            example: "Cup of coffee"
+          EANCode:
+            type: string
+            nullable: true
+            description: "Products EAN code"
+            example: "42222130165"
+          quantity:
+            type: string
+            description: "Quantity of product"
+            example: "1"
+          productId:
+            type: string
+            nullable: true
+            description: "Merchants internal productID"
+            example: "1234"
+          quantityCode:
+            type: string
+            description: "Quantity code for product"
+            example: "PCS"
+          freeText:
+            type: string
+            description: "Product related text field"
+            example: "Arabica coffee"
+          unitPriceIncVAT:
+            type: integer
+            description: "Unit price including VAT in fractional unit (Cents in Euros etc.)"
+            example: 111
+          unitPriceIncVATDecimal:
+            type: string
+            nullable: true
+            description: "Unit price including VAT in main currency unit. Mainly used by petrol receipts"
+            example: "1.11"
+          totalAmountExcVAT:
+            type: integer
+            description: "Total price for product row without VAT in fractional unit"
+            example: 76
+          totalAmountIncVAT:
+            type: integer
+            description: "Unit price including VAT in fractional unit (Cents in Euros etc.)"
+            example: 100
+          vats:
+            $ref: "#/components/schemas/ProductVats"
+          discounts:
+            $ref: "#/components/schemas/Discounts"
+          customAttributes:
+            $ref: "#/components/schemas/ProductAttributes"
+      required:
+        - name
+        - quantity
+        - quantityCode
+        - totalAmountExcVAT
+        - totalAmountIncVAT
+        - unitPriceIncVAT
+        - vats
+      title: Product
     ProductVats:
-        type: array
-        items:
-            type: object
-            additionalProperties: false
-            properties:
-                VATRate:
-                    type: string
-                    description: 'VAT rate.  Integer or Decimal'
-                    example: '24'
-                VATAmount:
-                    type: integer
-                    nullable: true
-                    description: 'VAT amount in fractional unit'
-                    example: 24
-                totalAmountExcVAT:
-                    type: integer
-                    description: 'Amount without VAT in fractional unit'
-                    example: 76
-                totalAmountIncVAT:
-                    type: integer
-                    description: 'Amount with VAT in fractional unit'
-                    example: 111
-            required:
-                - VATRate
-                - VATAmount
-                - totalAmountExcVAT
-                - totalAmountIncVAT
-            title: ProductVat
+      type: array
+      items:
+        type: object
+        additionalProperties: false
+        properties:
+          VATRate:
+            type: string
+            description: "VAT rate.  Integer or Decimal"
+            example: "24"
+          VATAmount:
+            type: integer
+            nullable: true
+            description: "VAT amount in fractional unit"
+            example: 24
+          totalAmountExcVAT:
+            type: integer
+            description: "Amount without VAT in fractional unit"
+            example: 76
+          totalAmountIncVAT:
+            type: integer
+            description: "Amount with VAT in fractional unit"
+            example: 111
+        required:
+          - VATRate
+          - VATAmount
+          - totalAmountExcVAT
+          - totalAmountIncVAT
+        title: ProductVat
     Discounts:
-        type: array
-        nullable: true
-        items:
-            type: object
-            additionalProperties: false
-            properties:
-                amount:
-                    type: integer
-                    description: 'Amount of discount in fractional unit'
-                    example: 20
-                percentage:
-                    type: string
-                    nullable: true
-                    description: 'Discount percentage in decimal'
-                    example: '0.20'
-                description:
-                    type: string
-                    description: 'Discount reason in free text'
-                    example: 'Everything with 20% discount friday'
-            required:
-                - amount
-                - description
-            title: Discount
+      type: array
+      nullable: true
+      items:
+        type: object
+        additionalProperties: false
+        properties:
+          amount:
+            type: integer
+            description: "Amount of discount in fractional unit"
+            example: 20
+          percentage:
+            type: string
+            nullable: true
+            description: "Discount percentage in decimal"
+            example: "0.20"
+          description:
+            type: string
+            description: "Discount reason in free text"
+            example: "Everything with 20% discount friday"
+        required:
+          - amount
+          - description
+        title: Discount
     ProductAttributes:
-        type: array
-        nullable: true
-        items:
-            type: object
-            additionalProperties: true
-            maxProperties: 1
-            title: HeroJSONCustomAttribute
+      type: array
+      nullable: true
+      items:
+        type: object
+        additionalProperties: true
+        maxProperties: 1
+        title: HeroJSONCustomAttribute
     ReceiptVats:
-        description: 'Receipt total VATs as array of objects per VAT rate'
-        type: array
-        items:
-            type: object
-            additionalProperties: false
-            properties:
-                VATRate:
-                    type: string
-                    description: 'VAT rate.  Integer or Decimal'
-                    example: '0.20'
-                totalVATAmount:
-                    type: integer
-                    description: 'VAT amount in fractional unit'
-                    example: 24
-                totalAmountExcVAT:
-                    type: integer
-                    description: 'Amount without VAT in fractional unit'
-                    example: 76
-                totalAmountIncVAT:
-                    type: integer
-                    description: 'Amount with VAT in fractional unit'
-                    example: 100
-            required:
-                - VATRate
-                - totalVATAmount
-                - totalAmountExcVAT
-                - totalAmountIncVAT
-            title: Vat
+      description: "Receipt total VATs as array of objects per VAT rate"
+      type: array
+      items:
+        type: object
+        additionalProperties: false
+        properties:
+          VATRate:
+            type: string
+            description: "VAT rate.  Integer or Decimal"
+            example: "0.20"
+          totalVATAmount:
+            type: integer
+            description: "VAT amount in fractional unit"
+            example: 24
+          totalAmountExcVAT:
+            type: integer
+            description: "Amount without VAT in fractional unit"
+            example: 76
+          totalAmountIncVAT:
+            type: integer
+            description: "Amount with VAT in fractional unit"
+            example: 100
+        required:
+          - VATRate
+          - totalVATAmount
+          - totalAmountExcVAT
+          - totalAmountIncVAT
+        title: Vat
     Payments:
       oneOf:
-        - $ref: '#/components/schemas/Card'
-        - $ref: '#/components/schemas/Cash'
-        - $ref: '#/components/schemas/Loyalty'
-        - $ref: '#/components/schemas/OtherPayment'
+        - $ref: "#/components/schemas/Card"
+        - $ref: "#/components/schemas/Cash"
+        - $ref: "#/components/schemas/Loyalty"
+        - $ref: "#/components/schemas/OtherPayment"
     Card:
       type: object
       properties:
         type:
           type: string
           enum: [CARD]
-          example: 'CARD'
+          example: "CARD"
         amount:
           type: integer
-          description: 'Paid amount in fractional unit (POINT ECR API Amount, field 14)'
+          description: "Paid amount in fractional unit (POINT ECR API Amount, field 14)"
         attributes:
-          description: 'Payment terminal attributes. All these should be got from payment terminal'
+          description: "Payment terminal attributes. All these should be got from payment terminal"
           type: object
           additionalProperties: false
           properties:
             cardType:
               type: string
               nullable: true
-              description: 'Card type description if available'
-              example: 'PaymentCard'
+              description: "Card type description if available"
+              example: "PaymentCard"
             maskedPAN:
               type: string
-              description: 'Cards masked PAN. At least 4 last digits (POINT ECR API Card Number field 6)'
-              example: '411111******1111'
+              description: "Cards masked PAN. At least 4 last digits (POINT ECR API Card Number field 6)"
+              example: "411111******1111"
             timeStamp:
               type: string
               format: date-time
-              description: 'Payment ISO 8601 datetime in UTC (POINT ECR API Date and time of transaction field 13)'
-              example: '2021-10-21T11:44:33Z'
+              description: "Payment ISO 8601 datetime in UTC (POINT ECR API Date and time of transaction field 13)"
+              example: "2021-10-21T11:44:33Z"
             terminalId:
               type: string
               nullable: true
-              description: 'Terminal ID from terminal. (POINT ECR API Reader serial number, field 16)'
-              example: '123456789'
+              description: "Terminal ID from terminal. (POINT ECR API Reader serial number, field 16)"
+              example: "123456789"
             referenceNumber:
               type: string
-              description: 'Reference number / filingcode for transaction (POINT ECR API Filing code, field 12)'
-              example: '211021000000'
+              description: "Reference number / filingcode for transaction (POINT ECR API Filing code, field 12)"
+              example: "211021000000"
             authorizationCode:
               type: string
-              description: 'Payment authorization code (POINT ECR API Transaction Certificate, field 8)'
-              example: '123456'
+              description: "Payment authorization code (POINT ECR API Transaction Certificate, field 8)"
+              example: "123456"
             authorizationMethodType:
               type: string
               nullable: true
-              description: 'Payment authorization method free text'
-              example: '3'
+              description: "Payment authorization method free text"
+              example: "3"
             transactionId:
               type: string
               nullable: true
-              description: 'Transaction id (POINT ECR API TransactionID, field 11)'
-              example: '123456789'
+              description: "Transaction id (POINT ECR API TransactionID, field 11)"
+              example: "123456789"
           required:
             - maskedPAN
             - timeStamp
@@ -527,17 +525,17 @@ components:
             - authorizationCode
           title: CardAttributes
         customAttributes:
-          $ref: '#/components/schemas/CustomAttributes'
+          $ref: "#/components/schemas/CustomAttributes"
     Cash:
       type: object
       properties:
         type:
           type: string
           enum: [CASH]
-          example: 'CASH'
+          example: "CASH"
         amount:
           type: integer
-          description: 'Paid amount in fractional unit'
+          description: "Paid amount in fractional unit"
           example: 100
         attributes:
           type: object
@@ -545,7 +543,7 @@ components:
           properties:
             handedAmount:
               type: integer
-              description: 'Amount that is handed in cash in fractional unit'
+              description: "Amount that is handed in cash in fractional unit"
               example: 100
           required:
             - handedAmount
@@ -560,10 +558,10 @@ components:
         type:
           type: string
           enum: [LOYALTY]
-          example: 'LOYALTY'
+          example: "LOYALTY"
         amount:
           type: integer
-          description: 'Paid amount in fractional unit'
+          description: "Paid amount in fractional unit"
           example: 100
         attributes:
           type: object
@@ -571,18 +569,18 @@ components:
           properties:
             cardType:
               type: string
-              description: 'Free text card type / name'
-              example: 'Loyalty card xyz'
+              description: "Free text card type / name"
+              example: "Loyalty card xyz"
             maskedPAN:
               type: string
-              description: 'If loyalty card has number it can be placed here'
-              example: '123456'
+              description: "If loyalty card has number it can be placed here"
+              example: "123456"
           required:
-          - maskedPAN
-          - cardType
+            - maskedPAN
+            - cardType
           title: CashAttributes
         customAttributes:
-          $ref: '#/components/schemas/CustomAttributes'
+          $ref: "#/components/schemas/CustomAttributes"
       required:
         - attributes
         - type
@@ -593,10 +591,10 @@ components:
         type:
           type: string
           enum: [OTHERPAYMENT]
-          example: 'OTHERPAYMENT'
+          example: "OTHERPAYMENT"
         amount:
           type: integer
-          description: 'Paid amount in fractional unit'
+          description: "Paid amount in fractional unit"
           example: 100
         attributes:
           type: object
@@ -605,88 +603,88 @@ components:
             externaType:
               type: string
               nullable: true
-              description: 'Free text card type / name'
-              example: ''
+              description: "Free text card type / name"
+              example: ""
           title: OtherAttributes
         customAttributes:
-          $ref: '#/components/schemas/CustomAttributes'
+          $ref: "#/components/schemas/CustomAttributes"
       required:
         - type
         - amount
         - attributes
     CustomAttributes:
-        type: array
-        nullable: true
-        items:
-            type: object
-            additionalProperties: true
-            maxProperties: 1
-            title: HeroJSONCustomAttribute
-            description: 'Custom key value pair to be shown in receipt'
-            example:
-             - myCustom: 'key'
-    Receipt:
+      type: array
+      nullable: true
+      items:
         type: object
-        additionalProperties: false
-        required:
-            - currencyISOCode
-            - merchant
-            - payments
-            - products
-            - receiptNumber
-            - receiptTimeStamp
-            - totalPriceExcVAT
-            - totalPriceIncVAT
-            - totalVATAmount
-            - vats
-        properties:
-            freeText:
-                type: string
-                example: 'Thank you for visiting our cofe'
-                description: 'Freetext field to be displayed on receipt'
-            receiptNumber:
-                type: string
-                description: 'Merchants internal receiptnumber'
-                example: '123456789'
-            receiptTimeStamp:
-                type: string
-                format: date-time
-                description: 'ISO 8601 datetime in UTC , when purchase is made'
-                example: '2021-10-21T11:44:33Z'
-            currencyISOCode:
-                type: string
-                description: 'Currency code'
-                example: 'EUR'
-            totalVATAmount:
-                type: integer
-                description: 'Total VAT amount in fractional unit'
-                example: 24
-            totalPriceExcVAT:
-                type: integer
-                description: 'Total price excluding VAT'
-                example: 76
-            totalPriceIncVAT:
-                type: integer
-                description: 'Total price including VAT'
-                example: 100
-            merchant:
-                $ref: '#/components/schemas/Merchant'
-            vats:
-                $ref: '#/components/schemas/ReceiptVats'
-            products:
-                $ref: '#/components/schemas/Products'
-            payments:
-                $ref: '#/components/schemas/Payments'
-            customAttributes:
-                $ref: '#/components/schemas/CustomAttributes'
-            discounts:
-                $ref: '#/components/schemas/Discounts'
-    
+        additionalProperties: true
+        maxProperties: 1
+        title: HeroJSONCustomAttribute
+        description: "Custom key value pair to be shown in receipt"
+        example:
+          - myCustom: "key"
+    Receipt:
+      type: object
+      additionalProperties: false
+      required:
+        - currencyISOCode
+        - merchant
+        - payments
+        - products
+        - receiptNumber
+        - receiptTimeStamp
+        - totalPriceExcVAT
+        - totalPriceIncVAT
+        - totalVATAmount
+        - vats
+      properties:
+        freeText:
+          type: string
+          example: "Thank you for visiting our cofe"
+          description: "Freetext field to be displayed on receipt"
+        receiptNumber:
+          type: string
+          description: "Merchants internal receiptnumber"
+          example: "123456789"
+        receiptTimeStamp:
+          type: string
+          format: date-time
+          description: "ISO 8601 datetime in UTC , when purchase is made"
+          example: "2021-10-21T11:44:33Z"
+        currencyISOCode:
+          type: string
+          description: "Currency code"
+          example: "EUR"
+        totalVATAmount:
+          type: integer
+          description: "Total VAT amount in fractional unit"
+          example: 24
+        totalPriceExcVAT:
+          type: integer
+          description: "Total price excluding VAT"
+          example: 76
+        totalPriceIncVAT:
+          type: integer
+          description: "Total price including VAT"
+          example: 100
+        merchant:
+          $ref: "#/components/schemas/Merchant"
+        vats:
+          $ref: "#/components/schemas/ReceiptVats"
+        products:
+          $ref: "#/components/schemas/Products"
+        payments:
+          $ref: "#/components/schemas/Payments"
+        customAttributes:
+          $ref: "#/components/schemas/CustomAttributes"
+        discounts:
+          $ref: "#/components/schemas/Discounts"
+
     ReceiptArray:
       type: array
       items:
-        $ref: '#/components/schemas/Receipt'
-    
+        $ref: "#/components/schemas/Receipt"
+
     Attributes:
       type: object
       properties:
@@ -697,33 +695,33 @@ components:
             properties:
               value:
                 type: string
-                description: 'OAuth2 access token or hashed card value'
-                example: 'asdqwe123noasodon1o82n8312o4bfb1o28ba89s8bdaso8fb821'
+                description: "OAuth2 access token or hashed card value"
+                example: "asdqwe123noasodon1o82n8312o4bfb1o28ba89s8bdaso8fb821"
               id:
                 type: string
-                description: 'Constains information of used hash algorim'
-                example: 'hash-1'
+                description: "Constains information of used hash algorim"
+                example: "hash-1"
               type:
                 type: string
-                enum: [CARD,USER]
-                description: 'Select USER if value contains OAuth2 access token to identify user. Select CARD if value constains hashed card identifier'
-                example: 'USER'
-    
+                enum: [CARD, USER]
+                description: "Select USER if value contains OAuth2 access token to identify user. Select CARD if value constains hashed card identifier"
+                example: "USER"
+
     ReceiptWithAttribute:
-      description: 'This API is for Patners that are able to deliver card / user related token with receipt data'
+      description: "This API is for Patners that are able to deliver card / user related token with receipt data"
       type: object
       additionalProperties: false
       properties:
         receipt:
-          $ref: '#/components/schemas/Receipt'
+          $ref: "#/components/schemas/Receipt"
         attributes:
-          $ref: '#/components/schemas/Attributes'
-        
+          $ref: "#/components/schemas/Attributes"
+
     ReceiptWithAttributeArray:
       type: array
       items:
-        $ref: '#/components/schemas/ReceiptWithAttribute'
-        
+        $ref: "#/components/schemas/ReceiptWithAttribute"
+
     AccessTokenBody:
       type: object
       properties:
@@ -732,38 +730,38 @@ components:
           enum: [authorization_code]
         code:
           type: string
-          description: 'This parameter is the authorization code that the client previously received from the authorization server.'
-          example: ''
+          description: "This parameter is the authorization code that the client previously received from the authorization server."
+          example: ""
         client_id:
           type: string
-          description: 'This parameter must be same what used to start authorization flow'
-          example: ''
+          description: "This parameter must be same what used to start authorization flow"
+          example: ""
         client_secret:
           type: string
-          description: 'This parameter is sensitive secret to get access token. This should be used only in when getting access token. This is provided by receipthero'
-          example: ''
+          description: "This parameter is sensitive secret to get access token. This should be used only in when getting access token. This is provided by receipthero"
+          example: ""
         redirect_uri:
           type: string
-          description: 'Redirect url which was used in authorization flow'
-          example: 'https://receipthero.io/oauth/callback'
+          description: "Redirect url which was used in authorization flow"
+          example: "https://receipthero.io/oauth/callback"
 
     AccessTokenResponse:
       type: object
       properties:
         token_type:
           type: string
-          enum: [bearer]
+          enum: [Bearer]
         access_token:
           type: string
-          description: 'This is JWT encoded access token which provides privilege to read or write user content. JWT contains receipthero_id field which which indicates id of the connection'
-          example: ''
-    
+          description: "This is JWT encoded access token which provides privilege to read or write user content. JWT contains receipthero_id field which which indicates id of the connection"
+          example: ""
+
     OKResponse:
       type: object
       properties:
         status:
           type: string
-          enum: ['OK']
+          enum: ["OK"]
     Error:
       type: object
       properties:
@@ -774,43 +772,43 @@ components:
       type: apiKey
       name: Authorization
       in: header
-      description: 'Access any of endpoints POS partner app must include API key in every request. You can request API key from Receipthero. API key contains prefix Token '
+      description: "Access any of endpoints POS partner app must include API key in every request. You can request API key from Receipthero. API key contains prefix Token "
     PartnerAppAuthorization:
       type: apiKey
       name: RECEIPTHERO_APIKEY
       in: header
-      description: 'Access any of endpoints partner app must include API key in every request. You can request API key from Receipthero. API key contains prefix Token '
+      description: "Access any of endpoints partner app must include API key in every request. You can request API key from Receipthero. API key contains prefix Token "
     OAuth2AccessToken:
       type: apiKey
       name: Authorization
       in: header
-      description: 'Bearer token which was fetched through OAuth2 flow. Use Bearer prefix here'
+      description: "Bearer token which was fetched through OAuth2 flow. Use Bearer prefix here"
   examples:
     HeroJSONReceipt:
       value:
         payments:
-        - amount: 100
-          attributes:
-            timeStamp: '2021-10-21T11:44:33Z'
-            authorizationMethodType: '3'
-            maskedPAN: 411111******1111
-            referenceNumber: '211021000000'
-            authorizationCode: '123456'
-            cardType: PaymentCard
-            terminalId: '123456789'
-            transactionId: '123456789'
-          type: CARD
-          customAttributes:
-          - txz: '110022003300440055'
+          - amount: 100
+            attributes:
+              timeStamp: "2021-10-21T11:44:33Z"
+              authorizationMethodType: "3"
+              maskedPAN: 411111******1111
+              referenceNumber: "211021000000"
+              authorizationCode: "123456"
+              cardType: PaymentCard
+              terminalId: "123456789"
+              transactionId: "123456789"
+            type: CARD
+            customAttributes:
+              - txz: "110022003300440055"
         totalPriceIncVAT: 100
         totalVATAmount: 24
-        receiptTimeStamp: '2021-10-21T11:44:33Z'
+        receiptTimeStamp: "2021-10-21T11:44:33Z"
         merchant:
           companyID: FI29432413
           name: Receipthero Oy
           branch:
             address:
-              zipCode: '33210  '
+              zipCode: "33210  "
               country: Finland
               streetAddress: Finlaysoninkatu 7
               city: Tampere
@@ -819,61 +817,60 @@ components:
             name: Receipthero Tampere
             email: support@receipthero.io
         vats:
-        - VATRate: '24'
-          totalAmountIncVAT: 100
-          totalVATAmount: 24
-          totalAmountExcVAT: 76
-        currencyISOCode: EUR
-        receiptNumber: '123456789'
-        products:
-        - quantity: '1'
-          productId: '1234567'
-          discounts:
-          - amount: 11
-            percentage: '10'
-            description: Employee discount
-          quantityCode: Pcs
-          unitPriceIncVAT: 111
-          totalAmountIncVAT: 111
-          freeText: Arabica coffee
-          name: Cup of coffee
-          totalAmountExcVAT: 76
-          vats:
-          - VATRate: '24'
-            VATAmount: 24
-            totalAmountIncVAT: 111
+          - VATRate: "24"
+            totalAmountIncVAT: 100
+            totalVATAmount: 24
             totalAmountExcVAT: 76
-          customAttributes:
-          - milk: 'false'
+        currencyISOCode: EUR
+        receiptNumber: "123456789"
+        products:
+          - quantity: "1"
+            productId: "1234567"
+            discounts:
+              - amount: 11
+                percentage: "10"
+                description: Employee discount
+            quantityCode: Pcs
+            unitPriceIncVAT: 111
+            totalAmountIncVAT: 111
+            freeText: Arabica coffee
+            name: Cup of coffee
+            totalAmountExcVAT: 76
+            vats:
+              - VATRate: "24"
+                VATAmount: 24
+                totalAmountIncVAT: 111
+                totalAmountExcVAT: 76
+            customAttributes:
+              - milk: "false"
         customAttributes:
-        - cashier: Joel O.
+          - cashier: Joel O.
         totalPriceExcVAT: 100
     HeroJSONReceiptArray:
       value:
-        -
-          payments:
-          - amount: 100
-            attributes:
-              timeStamp: '2021-10-21T11:44:33Z'
-              authorizationMethodType: '3'
-              maskedPAN: 411111******1111
-              referenceNumber: '211021000000'
-              authorizationCode: '123456'
-              cardType: PaymentCard
-              terminalId: '123456789'
-              transactionId: '123456789'
-            type: CARD
-            customAttributes:
-            - txz: '110022003300440055'
+        - payments:
+            - amount: 100
+              attributes:
+                timeStamp: "2021-10-21T11:44:33Z"
+                authorizationMethodType: "3"
+                maskedPAN: 411111******1111
+                referenceNumber: "211021000000"
+                authorizationCode: "123456"
+                cardType: PaymentCard
+                terminalId: "123456789"
+                transactionId: "123456789"
+              type: CARD
+              customAttributes:
+                - txz: "110022003300440055"
           totalPriceIncVAT: 100
           totalVATAmount: 24
-          receiptTimeStamp: '2021-10-21T11:44:33Z'
+          receiptTimeStamp: "2021-10-21T11:44:33Z"
           merchant:
             companyID: FI29432413
             name: Receipthero Oy
             branch:
               address:
-                zipCode: '33210  '
+                zipCode: "33210  "
                 country: Finland
                 streetAddress: Finlaysoninkatu 7
                 city: Tampere
@@ -882,68 +879,67 @@ components:
               name: Receipthero Tampere
               email: support@receipthero.io
           vats:
-          - VATRate: '24'
-            totalAmountIncVAT: 100
-            totalVATAmount: 24
-            totalAmountExcVAT: 76
-          currencyISOCode: EUR
-          receiptNumber: '123456789'
-          products:
-          - quantity: '1'
-            productId: '1234567'
-            discounts:
-            - amount: 11
-              percentage: '10'
-              description: Employee discount
-            quantityCode: Pcs
-            unitPriceIncVAT: 111
-            totalAmountIncVAT: 111
-            freeText: Arabica coffee
-            name: Cup of coffee
-            totalAmountExcVAT: 76
-            vats:
-            - VATRate: '24'
-              VATAmount: 24
-              totalAmountIncVAT: 111
+            - VATRate: "24"
+              totalAmountIncVAT: 100
+              totalVATAmount: 24
               totalAmountExcVAT: 76
-            customAttributes:
-            - milk: 'false'
+          currencyISOCode: EUR
+          receiptNumber: "123456789"
+          products:
+            - quantity: "1"
+              productId: "1234567"
+              discounts:
+                - amount: 11
+                  percentage: "10"
+                  description: Employee discount
+              quantityCode: Pcs
+              unitPriceIncVAT: 111
+              totalAmountIncVAT: 111
+              freeText: Arabica coffee
+              name: Cup of coffee
+              totalAmountExcVAT: 76
+              vats:
+                - VATRate: "24"
+                  VATAmount: 24
+                  totalAmountIncVAT: 111
+                  totalAmountExcVAT: 76
+              customAttributes:
+                - milk: "false"
           customAttributes:
-          - cashier: Joel O.
+            - cashier: Joel O.
           totalPriceExcVAT: 100
     #
     HeroJSONReceiptWithAttributes:
       value:
         attributes:
           tokens:
-            -
-              value: '123'
-              id: '123'
-              type: 'CARD'
+            - value: "123"
+              id: "123"
+              type: "CARD"
         receipt:
           payments:
-          - amount: 100
-            attributes:
-              timeStamp: '2021-10-21T11:44:33Z'
-              authorizationMethodType: '3'
-              maskedPAN: 411111******1111
-              referenceNumber: '211021000000'
-              authorizationCode: '123456'
-              cardType: PaymentCard
-              terminalId: '123456789'
-              transactionId: '123456789'
-            type: CARD
-            customAttributes:
-            - txz: '110022003300440055'
+            - amount: 100
+              attributes:
+                timeStamp: "2021-10-21T11:44:33Z"
+                authorizationMethodType: "3"
+                maskedPAN: 411111******1111
+                referenceNumber: "211021000000"
+                authorizationCode: "123456"
+                cardType: PaymentCard
+                terminalId: "123456789"
+                transactionId: "123456789"
+              type: CARD
+              customAttributes:
+                - txz: "110022003300440055"
           totalPriceIncVAT: 100
           totalVATAmount: 24
-          receiptTimeStamp: '2021-10-21T11:44:33Z'
+          receiptTimeStamp: "2021-10-21T11:44:33Z"
           merchant:
             companyID: FI29432413
             name: Receipthero Oy
             branch:
               address:
-                zipCode: '33210  '
+                zipCode: "33210  "
                 country: Finland
                 streetAddress: Finlaysoninkatu 7
                 city: Tampere
@@ -952,103 +948,101 @@ components:
               name: Receipthero Tampere
               email: support@receipthero.io
           vats:
-          - VATRate: '24'
-            totalAmountIncVAT: 100
-            totalVATAmount: 24
-            totalAmountExcVAT: 76
-          currencyISOCode: EUR
-          receiptNumber: '123456789'
-          products:
-          - quantity: '1'
-            productId: '1234567'
-            discounts:
-            - amount: 11
-              percentage: '10'
-              description: Employee discount
-            quantityCode: Pcs
-            unitPriceIncVAT: 111
-            totalAmountIncVAT: 111
-            freeText: Arabica coffee
-            name: Cup of coffee
-            totalAmountExcVAT: 76
-            vats:
-            - VATRate: '24'
-              VATAmount: 24
-              totalAmountIncVAT: 111
+            - VATRate: "24"
+              totalAmountIncVAT: 100
+              totalVATAmount: 24
               totalAmountExcVAT: 76
-            customAttributes:
-            - milk: 'false'
+          currencyISOCode: EUR
+          receiptNumber: "123456789"
+          products:
+            - quantity: "1"
+              productId: "1234567"
+              discounts:
+                - amount: 11
+                  percentage: "10"
+                  description: Employee discount
+              quantityCode: Pcs
+              unitPriceIncVAT: 111
+              totalAmountIncVAT: 111
+              freeText: Arabica coffee
+              name: Cup of coffee
+              totalAmountExcVAT: 76
+              vats:
+                - VATRate: "24"
+                  VATAmount: 24
+                  totalAmountIncVAT: 111
+                  totalAmountExcVAT: 76
+              customAttributes:
+                - milk: "false"
           customAttributes:
-          - cashier: Joel O.
+            - cashier: Joel O.
           totalPriceExcVAT: 100
     #
     HeroJSONReceiptWithAttributesArray:
       value:
-       -
-        attributes:
-          tokens:
-            -
-              value: '123'
-              id: '123'
-              type: 'CARD'
-        receipt:
-          payments:
-          - amount: 100
-            attributes:
-              timeStamp: '2021-10-21T11:44:33Z'
-              authorizationMethodType: '3'
-              maskedPAN: 411111******1111
-              referenceNumber: '211021000000'
-              authorizationCode: '123456'
-              cardType: PaymentCard
-              terminalId: '123456789'
-              transactionId: '123456789'
-            type: CARD
-            customAttributes:
-            - txz: '110022003300440055'
-          totalPriceIncVAT: 100
-          totalVATAmount: 24
-          receiptTimeStamp: '2021-10-21T11:44:33Z'
-          merchant:
-            companyID: FI29432413
-            name: Receipthero Oy
-            branch:
-              address:
-                zipCode: '33210  '
-                country: Finland
-                streetAddress: Finlaysoninkatu 7
-                city: Tampere
-              phone: "+358123456789"
-              subName: Cafe
-              name: Receipthero Tampere
-              email: support@receipthero.io
-          vats:
-          - VATRate: '24'
-            totalAmountIncVAT: 100
+        - attributes:
+            tokens:
+              - value: "123"
+                id: "123"
+                type: "CARD"
+          receipt:
+            payments:
+              - amount: 100
+                attributes:
+                  timeStamp: "2021-10-21T11:44:33Z"
+                  authorizationMethodType: "3"
+                  maskedPAN: 411111******1111
+                  referenceNumber: "211021000000"
+                  authorizationCode: "123456"
+                  cardType: PaymentCard
+                  terminalId: "123456789"
+                  transactionId: "123456789"
+                type: CARD
+                customAttributes:
+                  - txz: "110022003300440055"
+            totalPriceIncVAT: 100
             totalVATAmount: 24
-            totalAmountExcVAT: 76
-          currencyISOCode: EUR
-          receiptNumber: '123456789'
-          products:
-          - quantity: '1'
-            productId: '1234567'
-            discounts:
-            - amount: 11
-              percentage: '10'
-              description: Employee discount
-            quantityCode: Pcs
-            unitPriceIncVAT: 111
-            totalAmountIncVAT: 111
-            freeText: Arabica coffee
-            name: Cup of coffee
-            totalAmountExcVAT: 76
+            receiptTimeStamp: "2021-10-21T11:44:33Z"
+            merchant:
+              companyID: FI29432413
+              name: Receipthero Oy
+              branch:
+                address:
+                  zipCode: "33210  "
+                  country: Finland
+                  streetAddress: Finlaysoninkatu 7
+                  city: Tampere
+                phone: "+358123456789"
+                subName: Cafe
+                name: Receipthero Tampere
+                email: support@receipthero.io
             vats:
-            - VATRate: '24'
-              VATAmount: 24
-              totalAmountIncVAT: 111
-              totalAmountExcVAT: 76
+              - VATRate: "24"
+                totalAmountIncVAT: 100
+                totalVATAmount: 24
+                totalAmountExcVAT: 76
+            currencyISOCode: EUR
+            receiptNumber: "123456789"
+            products:
+              - quantity: "1"
+                productId: "1234567"
+                discounts:
+                  - amount: 11
+                    percentage: "10"
+                    description: Employee discount
+                quantityCode: Pcs
+                unitPriceIncVAT: 111
+                totalAmountIncVAT: 111
+                freeText: Arabica coffee
+                name: Cup of coffee
+                totalAmountExcVAT: 76
+                vats:
+                  - VATRate: "24"
+                    VATAmount: 24
+                    totalAmountIncVAT: 111
+                    totalAmountExcVAT: 76
+                customAttributes:
+                  - milk: "false"
             customAttributes:
-            - milk: 'false'
-          customAttributes:
-          - cashier: Joel O.
-          totalPriceExcVAT: 100
+              - cashier: Joel O.
+            totalPriceExcVAT: 100
